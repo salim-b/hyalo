@@ -3,88 +3,22 @@ mod common;
 use common::hyalo_no_hints;
 
 #[test]
-fn completion_bash_produces_output() {
-    let output = hyalo_no_hints()
-        .args(["completion", "bash"])
-        .output()
-        .unwrap();
+fn completion_all_shells_produce_output() {
+    for shell in ["bash", "zsh", "fish", "elvish", "powershell"] {
+        let output = hyalo_no_hints()
+            .args(["completion", shell])
+            .output()
+            .unwrap();
 
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(output.status.success(), "stderr: {stderr}");
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        assert!(output.status.success(), "{shell}: stderr: {stderr}");
 
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(
-        stdout.contains("hyalo"),
-        "bash completions should reference the binary name"
-    );
-}
-
-#[test]
-fn completion_zsh_produces_output() {
-    let output = hyalo_no_hints()
-        .args(["completion", "zsh"])
-        .output()
-        .unwrap();
-
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(output.status.success(), "stderr: {stderr}");
-
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(
-        stdout.contains("hyalo"),
-        "zsh completions should reference the binary name"
-    );
-}
-
-#[test]
-fn completion_fish_produces_output() {
-    let output = hyalo_no_hints()
-        .args(["completion", "fish"])
-        .output()
-        .unwrap();
-
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(output.status.success(), "stderr: {stderr}");
-
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(
-        stdout.contains("hyalo"),
-        "fish completions should reference the binary name"
-    );
-}
-
-#[test]
-fn completion_elvish_produces_output() {
-    let output = hyalo_no_hints()
-        .args(["completion", "elvish"])
-        .output()
-        .unwrap();
-
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(output.status.success(), "stderr: {stderr}");
-
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(
-        stdout.contains("hyalo"),
-        "elvish completions should reference the binary name"
-    );
-}
-
-#[test]
-fn completion_powershell_produces_output() {
-    let output = hyalo_no_hints()
-        .args(["completion", "powershell"])
-        .output()
-        .unwrap();
-
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    assert!(output.status.success(), "stderr: {stderr}");
-
-    let stdout = String::from_utf8(output.stdout).unwrap();
-    assert!(
-        stdout.contains("hyalo"),
-        "powershell completions should reference the binary name"
-    );
+        let stdout = String::from_utf8(output.stdout).unwrap();
+        assert!(
+            stdout.contains("hyalo"),
+            "{shell} completions should reference the binary name"
+        );
+    }
 }
 
 #[test]
